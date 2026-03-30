@@ -8,12 +8,23 @@ export default function RecipeDetail() {
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (id) {
-      const foundRecipe = getRecipeById(id);
-      setRecipe(foundRecipe);
-      setLoading(false);
-    }
+useEffect(() => {
+    const loadRecipe = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        const recipeData = await getRecipeById(id);
+        setRecipe(recipeData);
+      } catch (error) {
+        console.error('Failed to load recipe:', error);
+        setRecipe(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRecipe();
   }, [id]);
 
   if (loading) {

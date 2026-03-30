@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loadRecipes } from ".././services/recipeService.jsx";
+import { getRecipes } from "../services/recipeService.jsx";
 import RecipeList from "../components/RecipeList.jsx";
 import ShoppingList from "../components/ShoppingList.jsx";
 import AddRecipeForm from "../components/AddRecipeForm.jsx";
@@ -13,7 +13,14 @@ export default function RecipesPage() {
   const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
-    setRecipes(loadRecipes());
+    getRecipes()
+      .then(recipes => {
+        console.log('RecipesPage loaded recipes:', recipes);
+        setRecipes(recipes);
+      })
+      .catch(err => {
+        console.error('Failed to load recipes:', err);
+      });
   }, []);
 
   const generateList = () => {
@@ -71,7 +78,7 @@ export default function RecipesPage() {
                 onClose={() => setShowAddModal(false)}
                 onSuccess={() => {
                   setShowAddModal(false);
-                  setRecipes(loadRecipes());
+                  getRecipes().then(setRecipes);
                 }} 
               />
             </div>
@@ -79,13 +86,20 @@ export default function RecipesPage() {
         )}
 
         {/* Recipes */}
-        <RecipeList
-          recipes={recipes}
-          selectedIds={selectedIds}
-          setSelectedIds={setSelectedIds}
-          guestCount={guests}
-          onGuestCountChange={setGuests}
-        />
+        {recipes.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-lg mb-4">No recipes found</p>
+            <p className="text-sm text-gray-400">Backend at http://localhost:3001 – check console</p>
+          </div>
+        ) : (
+          <RecipeList
+            recipes={recipes}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            guestCount={guests}
+            onGuestCountChange={setGuests}
+          />
+        )}
 
         {/* Guests */}
         <div className="flex items-center gap-4">

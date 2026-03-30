@@ -22,7 +22,7 @@ export const mockRecipes: Recipe[] = [
     prepTime: 15,
     cookTime: 20,
     servings: 4,
-    imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=500&h=400&fit=crop",
+    imageUrl: "https://res.cloudinary.com/djkv0io5j/image/upload/v1726749559/Ryoku-Cafe-Bangkok_bhayks.jpg",
     tags: ["Italian", "Pasta", "Classic"],
     description: "Authentic Roman spaghetti carbonara.",
     ingredients: [
