@@ -23,7 +23,7 @@ export default function ShoppingList({ shoppingList }) {
                 <div key={index} className="flex justify-between">
                   <span>{item.name}</span>
                   <span className="text-gray-600">
-                    {item.total_amount} {item.unit}
+                    {item.total_amount.toFixed(1)} {item.unit}
                   </span>
                 </div>
               ))}
