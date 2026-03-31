@@ -48,16 +48,10 @@ export default function RecipeList({
               placeholder="Search recipes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-3 border rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-12 pr-6 py-4 sage-glass rounded-2xl w-full focus:outline-none focus:ring-2 focus:ring-sage-400 shadow-lg text-sage-800 placeholder-sage-500"
             />
           </div>
           
-          <select value={selectedDifficulty} onChange={(e) => setSelectedDifficulty(e.target.value)} className="w-44 p-3 border rounded-xl">
-            <option value="All">All</option>
-            {DIFFICULTIES.map(diff => (
-              <option key={diff} value={diff}>{diff}</option>
-            ))}
-          </select>
         </div>
 
         {/* Category Chips */}
@@ -65,10 +59,10 @@ export default function RecipeList({
           {["All", ...CATEGORIES].map(category => (
             <div
               key={category}
-              className={`px-4 py-2 rounded-full cursor-pointer transition-colors ${
+              className={`px-4 py-2 rounded-full cursor-pointer transition-all font-medium shadow-sm text-sm ${
                 selectedCategory === category 
-                  ? "bg-blue-500 text-white" 
-                  : "bg-gray-200 hover:bg-gray-300"
+                  ? "bg-gradient-to-r from-sage-500 to-pinky-500 text-white shadow-glow-sage hover:scale-105" 
+                  : "sage-glass hover:shadow-glow-pinky hover:-translate-y-0.5 border hover:border-sage-300"
               }`}
               onClick={() => setSelectedCategory(category)}
             >
@@ -80,8 +74,8 @@ export default function RecipeList({
 
       {/* Selection Summary */}
       {selectedRecipes.length > 0 && (
-        <div className="flex items-center gap-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-          <div className="w-5 h-5 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xs">👥</div>
+        <div className="flex items-center gap-4 p-6 sage-glass rounded-2xl shadow-lg border border-sage-200">
+          <div className="w-6 h-6 bg-gradient-to-r from-sage-500 to-pinky-500 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-glow-sage">👥</div>
           <div>
             <span className="font-semibold text-emerald-800">
               {selectedRecipes.length} recipes selected
@@ -90,21 +84,11 @@ export default function RecipeList({
               for {guestCount} {guestCount === 1 ? 'guest' : 'guests'}
             </span>
           </div>
-          {onGuestCountChange && (
-            <input
-              type="number"
-              min="1"
-              max="20"
-              value={guestCount}
-              onChange={(e) => onGuestCountChange(Number(e.target.value))}
-              className="w-20 border rounded px-3 py-1 ml-auto focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          )}
         </div>
       )}
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {filteredRecipes.map(recipe => (
           <RecipeCard
             key={recipe.id}

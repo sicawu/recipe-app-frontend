@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getRecipeById } from '../services/recipeService.jsx';
 import { ArrowLeft } from 'lucide-react';
+import { ClockIcon, PrepIcon, CookIcon, DifficultyIcon } from '.././components/ui/icons.jsx';
 
 export default function RecipeDetail() {
   const { id } = useParams();
@@ -52,29 +53,31 @@ useEffect(() => {
   const totalTime = recipe.prepTime + recipe.cookTime;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen sagepink-gradient py-12 px-6">
+      <div className="max-w-5xl mx-auto sage-glass rounded-3xl shadow-2xl overflow-hidden">
         {/* Header & Back */}
-        <div className="p-8 border-b border-gray-200">
+        <div className="p-10 border-b border-sage-200/50">
           <Link 
             to="/" 
-            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition-colors mb-6"
+            className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage mb-8 rounded-2xl px-8 py-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Recipes
           </Link>
           
           <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{recipe.name}</h1>
-              {recipe.category && (
-                <span className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-medium mr-3">
+            <div className="flex-1">
+              <h1 className="handwritten text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent mb-4">
+                {recipe.name}
+              </h1>
+{recipe.category && (
+                <span className="px-4 py-2 bg-gradient-to-r from-fir-500 to-sage-500 text-white rounded-full text-sm font-medium mr-3 shadow-md">
                   {recipe.category}
                 </span>
               )}
             </div>
             <div className="text-right">
-              <span className="block text-3xl font-bold text-emerald-600">{recipe.servings}</span>
+              <span className="block text-3xl font-bold text-fir-600">{recipe.servings}</span>
               <span className="text-sm text-gray-600">servings</span>
             </div>
           </div>
@@ -98,22 +101,24 @@ useEffect(() => {
         {/* Meta */}
         <div className="p-8 pt-6 pb-4 border-b border-gray-200 flex items-center gap-8 text-sm text-gray-600">
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-amber-500 rounded-full"></span>
-            <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full font-medium">
+<DifficultyIcon className="text-sage-500" />
+            <span className="px-3 py-1 bg-sage-100 text-sage-800 rounded-full font-medium">
               {recipe.difficulty}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-            <span>{totalTime} min total</span>
+            <span className="w-3 h-3 bg-fir-500 rounded-full"></span>
+<span>{totalTime} min total</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-            <span>Prep: {recipe.prepTime} min</span>
+            <ClockIcon className="text-fir-500" />
+<span>Prep: {recipe.prepTime} min</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
-            <span>Cook: {recipe.cookTime} min</span>
+            <PrepIcon className="text-fir-500" />
+<span>Cook: {recipe.cookTime} min</span>
+            <CookIcon className="text-fir-500" />
+            <span className="text-xs bg-fir-100 text-fir-800 px-2 py-0.5 rounded-full ml-1">Hot!</span>
           </div>
         </div>
 
@@ -132,7 +137,7 @@ useEffect(() => {
               <h2 className="text-2xl font-bold mb-4">Tags</h2>
               <div className="flex flex-wrap gap-2">
                 {recipe.tags.map(tag => (
-                  <span key={tag} className="px-4 py-2 bg-gray-200 text-gray-800 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">
+                  <span key={tag} className="px-4 py-2 bg-scandi-100 text-scandi-800 rounded-full text-sm font-medium hover:bg-scandi-200 transition-colors">
                     {tag}
                   </span>
                 ))}
@@ -146,7 +151,7 @@ useEffect(() => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {recipe.ingredients.map((ing, index) => (
                 <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:bg-gray-100 transition-colors">
-                  <span className="w-8 h-8 bg-white rounded-xl flex items-center justify-center font-bold text-emerald-600 text-sm">{index + 1}</span>
+                  <span className="w-8 h-8 bg-white rounded-xl flex items-center justify-center font-bold text-fir-600 text-sm">{index + 1}</span>
                   <div className="flex-1">
                     <div className="font-medium text-gray-900">{ing.name}</div>
                     <div className="text-2xl font-bold text-gray-800">{ing.amount} {ing.unit}</div>

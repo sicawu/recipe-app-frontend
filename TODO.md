@@ -1,15 +1,14 @@
-# Recipe Detail Page Implementation
+# Gamification Removal TODO
 
-## Remaining Steps
-- [x] 1. Install react-router-dom (`npm install react-router-dom`)
-- [x] 2. Update src/App.jsx: Add BrowserRouter and Routes for / (RecipesPage) and /recipes/:id (RecipeDetail)
-- [x] 3. Create src/pages/RecipeDetail.jsx: Full detail view with useParams, getRecipeById, ingredients/instructions display
-- [x] 4. Update src/components/RecipeCard.jsx: Wrap in Link for nav to detail, add separate selection checkbox/icon
-- [ ] 5. Test navigation, selection, back button (`npm start`)
+## Approved Plan Steps:
+- [x] Create TODO.md with removal steps
+- [ ] Step 1: Delete `src/pages/Dashboard.jsx` and `GAMIFICATION-TODO.md`
+- [ ] Step 2: Edit `src/lib/constants.jsx` - Remove ACHIEVEMENTS and BADGES exports
+- [ ] Step 3: Edit `src/pages/RecipesPage.jsx` - Remove imports, unused state, update button classes
+- [ ] Step 4: Edit `src/pages/RecipeDetail.jsx` - Update back button class
+- [ ] Step 5: Edit `src/App.jsx` - Remove Dashboard import/route/sidebar link
+- [ ] Step 6: Edit `src/index.css` - Remove gamification CSS rules
+- [ ] Step 7: Test with `npm run dev`
 
-## Completed
-- 1. Installed react-router-dom
-- 2. Updated src/App.jsx for routing
-- 3. Created src/pages/RecipeDetail.jsx
-- 4. Updated src/components/RecipeCard.jsx for navigation and selection toggle
+**Progress:** Starting removals...
 

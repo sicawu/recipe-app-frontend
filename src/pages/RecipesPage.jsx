@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { getRecipes } from "../services/recipeService.jsx";
 import RecipeList from "../components/RecipeList.jsx";
-import ShoppingList from "../components/ShoppingList.jsx";
-import AddRecipeForm from "../components/AddRecipeForm.jsx";
-import { Plus } from "lucide-react";
+
+import { Link } from "react-router-dom";
+import { Plus, ShoppingBag } from "lucide-react";
+import { createShoppingList } from "../services/recipeService.jsx";
+import { ACHIEVEMENTS, BADGES } from "../lib/constants.jsx";
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState([]);
   const [shoppingList, setShoppingList] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [guests, setGuests] = useState(2);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [listName, setListName] = useState('');
+
+  const [xp, setXp] = useState(1250);
+  const [streak, setStreak] = useState(5);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     getRecipes()
@@ -23,7 +29,7 @@ export default function RecipesPage() {
       });
   }, []);
 
-  const generateList = () => {
+  const generateList = async () => {
     const selectedRecipes = recipes.filter(r => selectedIds.includes(r.id));
     const ingredientMap = new Map();
 
@@ -40,8 +46,21 @@ export default function RecipesPage() {
       });
     });
 
-    const shoppingList = Array.from(ingredientMap.values());
-    setShoppingList(shoppingList);
+    const listData = Array.from(ingredientMap.values());
+    setShoppingList(listData);
+    
+    // Save to backend
+    try {
+      await createShoppingList({
+        name: listName || `List for ${guests} ${guests === 1 ? 'person' : 'people'}`,
+        recipeIds: selectedIds,
+        ingredients: listData,
+        guests
+      });
+      console.log('Shopping list saved');
+    } catch (err) {
+      console.error('Failed to save shopping list:', err);
+    }
   };
 
   function getIngredientCategory(name) {
@@ -54,36 +73,21 @@ export default function RecipesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center p-6">
-      <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-6 space-y-6">
+    <div className="min-h-screen sagepink-gradient flex justify-center p-6 py-12">
+      <div className="w-full max-w-6xl sage-glass rounded-3xl shadow-2xl p-8 space-y-8">
 
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
-            Recipe Planner
+          <h1 className="font-bold text-5xl md:text-6xl leading-tight bg-gradient-to-r from-sage-600 via-sage-500 to-pinky-500 bg-clip-text text-transparent tracking-tight">
+            My Recipe Planner
           </h1>
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-          >
+          <Link to="/add-recipe" className="gamification-btn bg-gradient-to-r from-sage-500 to-sage-600 text-white hover:shadow-glow-sage hover:scale-105 px-5 py-2 rounded-full inline-flex items-center gap-2 shadow-md text-sm font-medium">
             <Plus className="w-4 h-4" />
             Add Recipe
-          </button>
+          </Link>
         </div>
 
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl max-h-[90vh] overflow-y-auto w-full max-w-6xl">
-              <AddRecipeForm 
-                onClose={() => setShowAddModal(false)}
-                onSuccess={() => {
-                  setShowAddModal(false);
-                  getRecipes().then(setRecipes);
-                }} 
-              />
-            </div>
-          </div>
-        )}
+
 
         {/* Recipes */}
         {recipes.length === 0 ? (
@@ -97,31 +101,56 @@ export default function RecipesPage() {
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
             guestCount={guests}
-            onGuestCountChange={setGuests}
           />
         )}
 
-        {/* Guests */}
-        <div className="flex items-center gap-4">
-          <label className="font-medium">Guests:</label>
-          <input
-            type="number"
-            value={guests}
-            onChange={(e) => setGuests(Number(e.target.value))}
-            className="border rounded px-3 py-1 w-20"
-          />
+        {/* Guests & Name - moved under recipes */}
+        <div className="space-y-4 p-6 sage-glass rounded-2xl shadow-lg border border-sage-200">
+          <div className="flex items-center gap-4">
+            <label className="font-medium text-lg">Guests:</label>
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={guests}
+              onChange={(e) => setGuests(Number(e.target.value))}
+              className="sage-glass rounded-xl px-4 py-2 w-24 text-sage-700 font-medium shadow-md focus:ring-2 focus:ring-pinky-400 text-lg"
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <label className="font-medium text-lg">List Name:</label>
+            <input
+              type="text"
+              placeholder="e.g. Dinner Party"
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              className="sage-glass rounded-xl px-4 py-3 flex-1 text-sage-700 font-medium shadow-md focus:ring-2 focus:ring-pinky-400 text-lg"
+            />
+          </div>
         </div>
 
-        {/* Button */}
-        <button
-          onClick={generateList}
-          className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
-        >
-          Generate Shopping List
-        </button>
-
-        {/* Shopping List */}
-        <ShoppingList shoppingList={shoppingList} />
+        {/* Nav to Shopping List */}
+{selectedIds.length > 0 ? (
+          <button
+            onClick={async () => {
+              await generateList();
+              window.location.href = '/shopping-list';
+            }}
+            disabled={!listName.trim()}
+            className="w-full gamification-btn bg-gradient-to-r from-pinky-500 to-pinky-600 text-white hover:shadow-glow-pinky py-4 rounded-2xl text-lg font-bold px-8"
+          >
+            <ShoppingBag className="w-6 h-6 inline mr-2" />
+            Generate & View List ({selectedIds.length} recipes)
+          </button>
+        ) : (
+          <Link
+            to="/shopping-list"
+            className="w-full gamification-btn bg-gradient-to-r from-pinky-500 to-pinky-600 text-white hover:shadow-glow-pinky py-4 rounded-2xl text-lg font-bold px-8 block text-center"
+          >
+            <ShoppingBag className="w-6 h-6 inline mr-2" />
+            View Saved Lists
+          </Link>
+        )}
 
       </div>
     </div>

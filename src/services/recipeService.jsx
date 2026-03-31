@@ -14,3 +14,12 @@ export const updateRecipe = (id, recipe) => api.put(`/recipes/${id}`, recipe).th
 
 // Delete recipe
 export const deleteRecipe = (id) => api.delete(`/recipes/${id}`).then(res => res.data);
+
+// Shopping Lists
+export const createShoppingList = (listData) => api.post('/shopping-lists', listData).then(res => res.data);
+
+export const getShoppingLists = () => api.get('/shopping-lists').then(res => res.data);
+
+export const getShoppingListById = (id) => api.get(`/shopping-lists/${id}`).then(res => res.data);
+
+export const deleteShoppingList = (id) => api.delete(`/shopping-lists/${id}`).then(res => res.data);

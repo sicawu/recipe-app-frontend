@@ -142,7 +142,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               onKeyPress={(e) => e.key === 'Enter' && addTag()}
               className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
-            <button type="button" onClick={addTag} className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button type="button" onClick={addTag} className="p-3 bg-fir-500 text-white rounded-lg hover:bg-fir-600">
               <Plus className="w-4 h-4" />
             </button>
           </div>
@@ -150,7 +150,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
             {formData.tags.map((tag, index) => (
               <div key={index} className="flex items-center gap-1 bg-gray-200 px-3 py-1 rounded-full text-sm">
                 {tag}
-                <button onClick={() => removeTag(index)} className="text-gray-500 hover:text-gray-700">
+                <button onClick={() => removeTag(index)} className="text-scandi-500 hover:text-fir-600">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -181,7 +181,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })}
               className="w-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
-            <button type="button" onClick={addIngredient} className="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600">
+            <button type="button" onClick={addIngredient} className="p-3 bg-fir-500 text-white rounded-lg hover:bg-fir-600">
               <Plus className="w-4 h-4" />
             </button>
           </div>
@@ -190,7 +190,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
                 <span className="font-medium">{ing.name}</span>
                 <span>{ing.amount} {ing.unit}</span>
-                <button onClick={() => removeIngredient(index)} className="text-red-500 hover:text-red-700">
+                <button onClick={() => removeIngredient(index)} className="text-scandi-500 hover:text-fir-600">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -210,14 +210,14 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               onChange={(e) => setNewInstruction(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && e.shiftKey && addInstruction()}
             />
-            <button type="button" onClick={addInstruction} className="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600">
+            <button type="button" onClick={addInstruction} className="p-3 bg-fir-500 text-white rounded-lg hover:bg-fir-600">
               <Plus className="w-4 h-4" />
             </button>
           </div>
           <div className="space-y-2">
             {formData.instructions.map((inst, index) => (
-              <div key={index} className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
-                <span className="font-bold text-blue-600 w-6">{index + 1}.</span>
+              <div key={index} className="flex items-start gap-2 p-3 bg-sage-50 rounded-lg">
+                <span className="font-bold text-sage-600 w-6">{index + 1}.</span>
                 <span>{inst}</span>
                 <button onClick={() => removeInstruction(index)} className="text-red-500 hover:text-red-700 ml-auto">
                   <Trash2 className="w-4 h-4" />
@@ -231,7 +231,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
           <button type="button" onClick={onClose} className="flex-1 p-3 border rounded-lg hover:bg-gray-100">
             Cancel
           </button>
-          <button type="submit" className="flex-1 p-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+          <button type="submit" className="flex-1 p-3 bg-gradient-to-r from-fir-500 to-pinky-500 text-white rounded-lg hover:from-fir-600 hover:to-pinky-600">
             Add Recipe
           </button>
         </div>
