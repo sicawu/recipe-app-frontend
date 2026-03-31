@@ -38,7 +38,7 @@ export default function RecipesPage() {
       recipe.ingredients.forEach(ing => {
         const key = `${ing.name.toLowerCase()}-${ing.unit.toLowerCase()}`;
         const scaledAmount = ing.amount * scaleFactor;
-        const current = ingredientMap.get(key) || { name: ing.name, total_amount: 0, unit: ing.unit, category: getIngredientCategory(ing.name) };
+        const current = ingredientMap.get(key) || { name: ing.name, total_amount: 0, unit: ing.unit, category: ing.category || getIngredientCategory(ing.name) };
         ingredientMap.set(key, {
           ...current,
           total_amount: current.total_amount + scaledAmount
@@ -48,7 +48,7 @@ export default function RecipesPage() {
         recipe.dressing.forEach(ing => {
           const key = `${ing.name.toLowerCase()}-${ing.unit.toLowerCase()}`;
           const scaledAmount = ing.amount * scaleFactor;
-          const current = ingredientMap.get(key) || { name: ing.name, total_amount: 0, unit: ing.unit, category: getIngredientCategory(ing.name) };
+          const current = ingredientMap.get(key) || { name: ing.name, total_amount: 0, unit: ing.unit, category: ing.category || getIngredientCategory(ing.name) };
           ingredientMap.set(key, {
             ...current,
             total_amount: current.total_amount + scaledAmount

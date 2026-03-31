@@ -4,12 +4,12 @@ import { Plus, Trash2 } from 'lucide-react';
 const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece', 'cup', 'handful', 'bunch'];
 
 export default function DressingForm({ dressing, onDressingChange, title = 'Dressing Ingredients' }) {
-  const [newDressingIng, setNewDressingIng] = React.useState({ name: '', amount: 0, unit: '' });
+const [newDressingIng, setNewDressingIng] = React.useState({ name: '', category: '', amount: 0, unit: '' });
 
   const addDressingIng = () => {
     if (newDressingIng.name && newDressingIng.amount) {
       onDressingChange([...dressing, newDressingIng]);
-      setNewDressingIng({ name: '', amount: 0, unit: '' });
+      setNewDressingIng({ name: '', category: '', amount: 0, unit: '' });
     }
   };
 
@@ -28,6 +28,19 @@ export default function DressingForm({ dressing, onDressingChange, title = 'Dres
           onChange={(e) => setNewDressingIng({ ...newDressingIng, name: e.target.value })}
           className="flex-1 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
         />
+        <select 
+          value={newDressingIng.category} 
+          onChange={(e) => setNewDressingIng({ ...newDressingIng, category: e.target.value })}
+          className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+        >
+          <option value="">Category</option>
+          <option value="Produce">Produce</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Pantry">Pantry</option>
+          <option value="Meat">Meat</option>
+          <option value="Bakery">Bakery</option>
+          <option value="Other">Other</option>
+        </select>
         <input
           type="number"
           placeholder="Amount"
@@ -35,6 +48,7 @@ export default function DressingForm({ dressing, onDressingChange, title = 'Dres
           onChange={(e) => setNewDressingIng({ ...newDressingIng, amount: Number(e.target.value) })}
           className="w-24 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
         />
+
         <select 
           value={newDressingIng.unit} 
           onChange={(e) => setNewDressingIng({ ...newDressingIng, unit: e.target.value })}
@@ -50,11 +64,17 @@ export default function DressingForm({ dressing, onDressingChange, title = 'Dres
       <div className="space-y-2 max-h-32 overflow-y-auto">
         {dressing.map((ing, index) => (
           <div key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl shadow-sm">
+            {ing.category && (
+              <span className="px-2 py-1 bg-sage-100 text-sage-700 text-xs rounded-full font-medium min-w-[50px] text-center">
+                {ing.category}
+              </span>
+            )}
             <span className="font-bold text-sm text-sage-600 min-w-[60px]">{ing.amount} {ing.unit}</span>
             <span className="font-medium flex-1 text-sm">{ing.name}</span>
             <button onClick={() => removeDressingIng(index)} className="text-red-500 hover:text-red-700 p-1 hover:bg-red-100 rounded">
               <Trash2 className="w-4 h-4" />
             </button>
+
           </div>
         ))}
       </div>

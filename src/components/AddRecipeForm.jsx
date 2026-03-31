@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Plus, Trash2, X } from 'lucide-react';
 import DressingForm from './DressingForm.jsx';
 import { addRecipe } from '../services/recipeService';
-  const CATEGORIES = [
-    'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Main Course', 
-    'Side Dish', 'Snack', 'Drink', 'Dip', 'Sauce', 'Salad', 'Soup', 'Bake', 'Grill'
-  ];
-  const DIFFICULTIES = ['Easy', 'Medium', 'Pro'];
-  const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece', 'cup', 'handful', 'bunch'];
+const CATEGORIES = [
+  'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Main Course',
+  'Side Dish', 'Snack', 'Drink', 'Dip', 'Sauce', 'Salad', 'Soup', 'Bake', 'Grill', 'Bread'
+];
+const DIFFICULTIES = ['Easy', 'Medium', 'Pro'];
+const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece(s)', 'cup(s)', 'handful', 'bunch', 'oz'];
 
 export default function AddRecipeForm1({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
   });
   const [newTag, setNewTag] = useState('');
   const [dressing, setDressing] = useState([]);
-  const [newIngredient, setNewIngredient] = useState({ name: '', amount: 0, unit: '' });
+  const [newIngredient, setNewIngredient] = useState({ name: '', category: '', amount: 0, unit: '' });
   const [newInstruction, setNewInstruction] = useState('');
 
   const handleSubmit = (e) => {
@@ -50,7 +50,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
   const addIngredient = () => {
     if (newIngredient.name && newIngredient.amount) {
       setFormData({ ...formData, ingredients: [...formData.ingredients, newIngredient] });
-      setNewIngredient({ name: '', amount: 0, unit: '' });
+      setNewIngredient({ name: '', category: '', amount: 0, unit: '' });
     }
   };
 
@@ -171,7 +171,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
         <div>
           <label className="block text-sm font-semibold text-sage-700 mb-4">Tags (select)</label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {['Vegan', 'Vegetarian', 'Gluten-free', 'Dairy-free', 'Low-carb', 'Quick', 'Healthy', 'Spicy', 'Sweet', 'Savory', 'Family-friendly', 'Budget'].map((tag) => (
+            {['Vegan', 'Vegetarian', 'Gluten-free', 'Dairy-free', 'Low-carb', 'Quick', 'Healthy', 'Spicy', 'Sweet', 'Savory', 'Family-friendly'].map((tag) => (
               <label key={tag} className="flex items-center gap-2 p-3 sage-glass rounded-xl cursor-pointer hover:shadow-md transition-all">
                 <input
                   type="checkbox"
@@ -196,17 +196,32 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
           <label className="block text-sm font-medium mb-2">Ingredients</label>
           <div className="flex gap-2 mb-4">
             <input
+              type="text"
               placeholder="Name"
               value={newIngredient.name}
               onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
-              className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="flex-1 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
             />
+            <select
+              value={newIngredient.category || ''}
+              onChange={(e) => setNewIngredient({ ...newIngredient, category: e.target.value })}
+              className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+            >
+              <option value="">Category</option>
+              <option value="Produce">Produce</option>
+              <option value="Dairy">Dairy</option>
+              <option value="Pantry">Pantry</option>
+              <option value="Meat">Meat</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Drinks">Drinks</option>
+              <option value="Other">Other</option>
+            </select>
             <input
               type="number"
               placeholder="Amount"
               value={newIngredient.amount}
               onChange={(e) => setNewIngredient({ ...newIngredient, amount: Number(e.target.value) })}
-              className="w-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-24 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
             />
             <select value={newIngredient.unit} onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })} className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm">
               <option value="">Unit</option>
@@ -214,7 +229,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
                 <option key={u} value={u}>{u}</option>
               ))}
             </select>
-            <button type="button" onClick={addIngredient} className="p-3 bg-fir-500 text-white rounded-lg hover:bg-fir-600">
+            <button type="button" onClick={addIngredient} className="p-3 bg-fir-500 text-white rounded-xl hover:bg-fir-600 shadow-md">
               <Plus className="w-4 h-4" />
             </button>
           </div>
@@ -232,9 +247,9 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
         </div>
 
         {/* Dressing */}
-        <DressingForm 
-          dressing={dressing} 
-          onDressingChange={(newDressing) => setDressing(newDressing)} 
+        <DressingForm
+          dressing={dressing}
+          onDressingChange={(newDressing) => setDressing(newDressing)}
         />
 
         {/* Instructions */}

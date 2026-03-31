@@ -30,7 +30,7 @@ export default function EditRecipeForm() {
     dressing: [],
   });
   const [newTag, setNewTag] = useState('');
-  const [newIngredient, setNewIngredient] = useState({ name: '', amount: 0, unit: '' });
+  const [newIngredient, setNewIngredient] = useState({ name: '', category: '', amount: 0, unit: '' });
   const [newInstruction, setNewInstruction] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -90,7 +90,7 @@ export default function EditRecipeForm() {
   const addIngredient = () => {
     if (newIngredient.name && newIngredient.amount) {
       setFormData({ ...formData, ingredients: [...formData.ingredients, newIngredient] });
-      setNewIngredient({ name: '', amount: 0, unit: '' });
+      setNewIngredient({ name: '', category: '', amount: 0, unit: '' });
     }
   };
 
@@ -270,11 +270,25 @@ export default function EditRecipeForm() {
             <label className="block text-sm font-medium text-sage-700 mb-4">Ingredients</label>
             <div className="flex gap-2 mb-4">
               <input
+                type="text"
                 placeholder="Name (e.g. flour)"
                 value={newIngredient.name}
                 onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
                 className="flex-1 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
               />
+              <select 
+                value={newIngredient.category || ''} 
+                onChange={(e) => setNewIngredient({ ...newIngredient, category: e.target.value })}
+                className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+              >
+                <option value="">Category</option>
+                <option value="Produce">Produce</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Pantry">Pantry</option>
+                <option value="Meat">Meat</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Other">Other</option>
+              </select>
               <input
                 type="number"
                 placeholder="Amount"

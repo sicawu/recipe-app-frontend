@@ -1,11 +1,9 @@
-# Recipe App Frontend TODOs
+# Category Dropdown Standardization Task
 
-## Current Task: Add optional dressing section to recipes
-- [ ] 1. Backend: add dressing: [] array to Recipe model + update seeds if salad
-- [ ] 2. EditRecipeForm.jsx / AddRecipeForm.jsx: add dressing ingredients section (like ingredients)
-- [ ] 3. RecipeDetail.jsx: if dressing.length > 0, show "Dressing" sub-section (smaller heading)
-- [ ] 4. Update service calls for full recipe data
-- [ ] 5. Test with salad recipe
-
-**Confirm plan?**
-
+## Steps:
+- [ ] Step 1: Create this TODO.md and confirm creation
+- [x] Step 2: Edit src/components/DressingForm.jsx to add category field to newDressingIng state, input row, and display
+- [x] Step 3: Edit src/components/EditRecipeForm.jsx to standardize ingredients category select design and label
+- [x] Step 4: Edit src/components/AddRecipeForm.jsx for consistency in ingredients category
+- [x] Step 5: Verify alignment and test
+- [x] Step 6: Mark complete and attempt_completion
