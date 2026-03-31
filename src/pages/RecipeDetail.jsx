@@ -8,6 +8,7 @@ export default function RecipeDetail() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [guestServings, setGuestServings] = useState(recipe ? recipe.servings : 1);
 
 useEffect(() => {
     const loadRecipe = async () => {
@@ -17,6 +18,9 @@ useEffect(() => {
         setLoading(true);
         const recipeData = await getRecipeById(id);
         setRecipe(recipeData);
+        if (recipeData) {
+          setGuestServings(recipeData.servings);
+        }
       } catch (error) {
         console.error('Failed to load recipe:', error);
         setRecipe(null);
@@ -59,7 +63,7 @@ useEffect(() => {
         <div className="p-10 border-b border-sage-200/50">
           <Link 
             to="/" 
-            className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage mb-8 rounded-2xl px-8 py-4"
+            className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage mb-8 rounded-full px-6 py-2 text-sm shadow-lg"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Recipes
@@ -84,7 +88,7 @@ useEffect(() => {
         </div>
 
         {/* Image */}
-        <div className="relative h-96 lg:h-[500px] overflow-hidden bg-gradient-to-br from-slate-200/50 to-slate-300/50">
+        <div className="h-96 lg:h-[500px] overflow-hidden bg-gradient-to-br from-slate-200/50 to-slate-300/50">
           {recipe.imageUrl ? (
             <img
               src={recipe.imageUrl}
@@ -98,85 +102,104 @@ useEffect(() => {
           )}
         </div>
 
-        {/* Meta */}
-        <div className="p-8 pt-6 pb-4 border-b border-gray-200 flex items-center gap-8 text-sm text-gray-600">
-          <div className="flex items-center gap-2">
-<DifficultyIcon className="text-sage-500" />
-            <span className="px-3 py-1 bg-sage-100 text-sage-800 rounded-full font-medium">
-              {recipe.difficulty}
-            </span>
+        {/* Meta - single line with multiple icons */}
+        <div className="p-6 pt-4 pb-3 border-b border-sage-200/50 bg-gradient-to-r from-white/70 to-sage-50/70 backdrop-blur-sm flex items-center gap-6 text-sm">
+          <div className="flex items-center gap-2 text-sage-600">
+            <DifficultyIcon className="w-4 h-4" />
+            <span>{recipe.difficulty}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 bg-fir-500 rounded-full"></span>
-<span>{totalTime} min total</span>
+          <div className="flex items-center gap-2 text-fir-600 font-medium">
+            <ClockIcon className="w-4 h-4" />
+            <span>{totalTime} min</span>
           </div>
-          <div className="flex items-center gap-2">
-            <ClockIcon className="text-fir-500" />
-<span>Prep: {recipe.prepTime} min</span>
+          <div className="flex items-center gap-2 text-pinky-600">
+            <PrepIcon className="w-4 h-4" />
+            <span>{recipe.prepTime} prep</span>
           </div>
-          <div className="flex items-center gap-2">
-            <PrepIcon className="text-fir-500" />
-<span>Cook: {recipe.cookTime} min</span>
-            <CookIcon className="text-fir-500" />
-            <span className="text-xs bg-fir-100 text-fir-800 px-2 py-0.5 rounded-full ml-1">Hot!</span>
+          <div className="flex items-center gap-2 text-pinky-600">
+            <CookIcon className="w-4 h-4" />
+            <span>{recipe.cookTime} cook</span>
           </div>
         </div>
 
         <div className="p-8 space-y-8">
-          {/* Description */}
-          {recipe.description && (
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Description</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">{recipe.description}</p>
-            </div>
-          )}
 
-          {/* Tags */}
-          {recipe.tags && recipe.tags.length > 0 && (
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Tags</h2>
+            {/* Short description */}
+            {recipe.description && (
+              <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                {recipe.description}
+              </p>
+            )}
+
+            {/* Tags - pink design like overview selected category */}
+            {recipe.tags && recipe.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {recipe.tags.map(tag => (
-                  <span key={tag} className="px-4 py-2 bg-scandi-100 text-scandi-800 rounded-full text-sm font-medium hover:bg-scandi-200 transition-colors">
+                  <span key={tag} className="px-3 py-1 bg-gradient-to-r from-pinky-600/30 to-pinky-500/30 backdrop-blur-sm text-white rounded-full text-sm font-semibold sage-glass border border-pinky-300/50">
                     {tag}
                   </span>
                 ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Ingredients */}
-          <div>
-            <h2 className="text-2xl font-bold mb-6">Ingredients</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recipe.ingredients.map((ing, index) => (
-                <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-200 hover:bg-gray-100 transition-colors">
-                  <span className="w-8 h-8 bg-white rounded-xl flex items-center justify-center font-bold text-fir-600 text-sm">{index + 1}</span>
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900">{ing.name}</div>
-                    <div className="text-2xl font-bold text-gray-800">{ing.amount} {ing.unit}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            <h2 className="handwritten text-3xl font-bold mb-1 bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent">Ingredients</h2>
 
-          {/* Instructions */}
-          {recipe.instructions && recipe.instructions.length > 0 && (
+            {/* Tiny servings adjuster */}
+            <div className="flex items-center gap-3 px-3 sage-glass rounded-xl mb-2">
+              <label className="font-medium text-sm text-gray-700">For</label>
+              <input
+                type="number"
+                min="1"
+                max="20"
+                value={guestServings}
+                onChange={(e) => setGuestServings(Number(e.target.value))}
+                className="sage-glass rounded-lg px-3 w-16 text-sm font-bold text-sage-700 border border-sage-300 focus:ring-1 focus:ring-pinky-400 text-center"
+              />
+              <span className="text-sm text-gray-600">people</span>
+            </div>
+
+            <ul className="space-y-2">
+              {recipe.ingredients.map((ing, index) => {
+                const scaleFactor = guestServings / recipe.servings;
+                const scaledAmount = Math.round(ing.amount * scaleFactor * 10) / 10;
+                return (
+                  <li key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl">
+                    <span className="font-bold text-base text-sage-600 flex-shrink-0">{scaledAmount}</span>
+                    <span className="font-bold text-base bg-gradient-to-r from-sage-500 to-pinky-500 bg-clip-text text-transparent flex-shrink-0">{ing.unit}</span>
+                    <span className="font-medium text-base flex-1">{ing.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
+
+
+{recipe.instructions && recipe.instructions.length > 0 && (
             <div>
-              <h2 className="text-2xl font-bold mb-6">Instructions</h2>
+              <h2 className="handwritten text-3xl font-bold mb-6 bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent">Instructions</h2>
               <div className="space-y-6">
                 {recipe.instructions.map((step, index) => (
-                  <div key={index} className="flex gap-6">
-                    <div className="flex-shrink-0 w-12 h-12 bg-black text-white rounded-2xl flex items-center justify-center font-bold text-xl">
+                  <div key={index} className="flex gap-6 items-start">
+                    <div className="flex-shrink-0 w-10 h-8 bg-gradient-to-r from-sage-500 to-pinky-500 text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-glow-sage">
                       {index + 1}
                     </div>
-                    <div className="flex-1 pt-1">
-                      <p className="text-lg text-gray-800 leading-relaxed">{step}</p>
+                    <div className="flex-1">
+                      <p className="text-base text-gray-800 leading-relaxed pt-1">{step}</p>
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* Simona's Tip */}
+              {recipe.tip && (
+                <div>
+                  <h2 className="handwritten text-3xl font-bold mb-6 bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent mt-8 pt-6">
+                    Simona's Tip
+                  </h2>
+                  <div className="p-6 sage-glass rounded-2xl bg-gradient-to-r from-sage-50 to-white/50 border border-sage-200 shadow-lg">
+                    <p className="text-lg text-gray-800 leading-relaxed italic">💡 {recipe.tip}</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

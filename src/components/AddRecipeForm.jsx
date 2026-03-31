@@ -21,6 +21,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
     description: '',
     ingredients: [],
     instructions: [],
+    tip: '',
   });
   const [newTag, setNewTag] = useState('');
   const [newIngredient, setNewIngredient] = useState({ name: '', amount: 0, unit: '' });
@@ -150,6 +151,18 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
         />
+
+        {/* Tip */}
+        <div>
+          <label className="block text-sm font-semibold text-sage-700 mb-2">Chef Tip (optional)</label>
+          <textarea
+            placeholder="Pro tip like 'let bread cool before cutting'"
+            className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+            rows={2}
+            value={formData.tip}
+            onChange={(e) => setFormData({ ...formData, tip: e.target.value })}
+          />
+        </div>
 
         {/* Tags */}
         <div>

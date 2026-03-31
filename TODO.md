@@ -1,14 +1,13 @@
-# Gamification Removal TODO
+# Recipe App Frontend TODOs
 
-## Approved Plan Steps:
-- [x] Create TODO.md with removal steps
-- [ ] Step 1: Delete `src/pages/Dashboard.jsx` and `GAMIFICATION-TODO.md`
-- [ ] Step 2: Edit `src/lib/constants.jsx` - Remove ACHIEVEMENTS and BADGES exports
-- [ ] Step 3: Edit `src/pages/RecipesPage.jsx` - Remove imports, unused state, update button classes
-- [ ] Step 4: Edit `src/pages/RecipeDetail.jsx` - Update back button class
-- [ ] Step 5: Edit `src/App.jsx` - Remove Dashboard import/route/sidebar link
-- [ ] Step 6: Edit `src/index.css` - Remove gamification CSS rules
-- [ ] Step 7: Test with `npm run dev`
+## Current Task: Add tip/comment field to recipes
+- [x] 1. Analyze files (backend model, seeds, AddRecipeForm, RecipeDetail)
+- [x] 2. Update backend model ../backend/models/Recipe.js - add tip field ✓
+- [x] 3. Update seeds ../backend/seeds/recipes.json - add tip examples ✓
+- [x] 4. Update frontend AddRecipeForm.jsx - add tip input field in formData/state, UI, submit ✓
+- [x] 5. Update RecipeDetail.jsx - display tip section ✓
+- [x] 6. Restart backend `cd ../backend && node index.js` ✓ (running)
+- [x] 7. Test create new recipe with tip, view detail
 
-**Progress:** Starting removals...
+**Ready to implement step-by-step. Confirm to proceed?**
 
