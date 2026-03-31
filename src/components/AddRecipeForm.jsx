@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, X } from 'lucide-react';
+import DressingForm from './DressingForm.jsx';
 import { addRecipe } from '../services/recipeService';
   const CATEGORIES = [
     'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Main Course', 
@@ -22,14 +23,16 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
     ingredients: [],
     instructions: [],
     tip: '',
+    dressing: [],
   });
   const [newTag, setNewTag] = useState('');
+  const [dressing, setDressing] = useState([]);
   const [newIngredient, setNewIngredient] = useState({ name: '', amount: 0, unit: '' });
   const [newInstruction, setNewInstruction] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addRecipe(formData);
+    addRecipe({ ...formData, dressing });
     onSuccess();
   };
 
@@ -227,6 +230,12 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
             ))}
           </div>
         </div>
+
+        {/* Dressing */}
+        <DressingForm 
+          dressing={dressing} 
+          onDressingChange={(newDressing) => setDressing(newDressing)} 
+        />
 
         {/* Instructions */}
         <div>

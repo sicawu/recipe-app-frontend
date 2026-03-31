@@ -1,13 +1,11 @@
 # Recipe App Frontend TODOs
 
-## Current Task: Add tip/comment field to recipes
-- [x] 1. Analyze files (backend model, seeds, AddRecipeForm, RecipeDetail)
-- [x] 2. Update backend model ../backend/models/Recipe.js - add tip field ✓
-- [x] 3. Update seeds ../backend/seeds/recipes.json - add tip examples ✓
-- [x] 4. Update frontend AddRecipeForm.jsx - add tip input field in formData/state, UI, submit ✓
-- [x] 5. Update RecipeDetail.jsx - display tip section ✓
-- [x] 6. Restart backend `cd ../backend && node index.js` ✓ (running)
-- [x] 7. Test create new recipe with tip, view detail
+## Current Task: Add optional dressing section to recipes
+- [ ] 1. Backend: add dressing: [] array to Recipe model + update seeds if salad
+- [ ] 2. EditRecipeForm.jsx / AddRecipeForm.jsx: add dressing ingredients section (like ingredients)
+- [ ] 3. RecipeDetail.jsx: if dressing.length > 0, show "Dressing" sub-section (smaller heading)
+- [ ] 4. Update service calls for full recipe data
+- [ ] 5. Test with salad recipe
 
-**Ready to implement step-by-step. Confirm to proceed?**
+**Confirm plan?**
 

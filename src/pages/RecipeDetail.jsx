@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getRecipeById } from '../services/recipeService.jsx';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Pencil } from 'lucide-react';
 import { ClockIcon, PrepIcon, CookIcon, DifficultyIcon } from '.././components/ui/icons.jsx';
 
 export default function RecipeDetail() {
@@ -60,13 +60,20 @@ useEffect(() => {
     <div className="min-h-screen sagepink-gradient py-12 px-6">
       <div className="max-w-5xl mx-auto sage-glass rounded-3xl shadow-2xl overflow-hidden">
         {/* Header & Back */}
-        <div className="p-10 border-b border-sage-200/50">
+        <div className="p-10 border-b border-sage-200/50 relative">
           <Link 
             to="/" 
             className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage mb-8 rounded-full px-6 py-2 text-sm shadow-lg"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Recipes
+          </Link>
+
+          <Link 
+            to={`/edit-recipe/${recipe.id}`}
+            className="absolute top-4 right-4 gamification-btn bg-gradient-to-r from-pinky-500 to-sage-500 text-white hover:shadow-glow-pinky w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 transition-all"
+          >
+            <Pencil className="w-6 h-6" />
           </Link>
           
           <div className="flex items-start justify-between">
@@ -172,6 +179,24 @@ useEffect(() => {
               })}
             </ul>
 
+            {recipe.dressing && recipe.dressing.length > 0 && (
+              <div className="mt-6 pt-6 border-t border-sage-200">
+                <h3 className="handwritten text-2xl font-bold mb-4 bg-gradient-to-r from-pinky-500 to-sage-500 bg-clip-text text-transparent">🥗 Dressing</h3>
+                <ul className="space-y-2">
+                  {recipe.dressing.map((ing, index) => {
+                    const scaleFactor = guestServings / recipe.servings;
+                    const scaledAmount = Math.round(ing.amount * scaleFactor * 10) / 10;
+                    return (
+                      <li key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl bg-gradient-to-r from-pinky-50 to-sage-50">
+                        <span className="font-bold text-base text-sage-600 flex-shrink-0">{scaledAmount}</span>
+                        <span className="font-bold text-base bg-gradient-to-r from-pinky-500 to-sage-500 bg-clip-text text-transparent flex-shrink-0">{ing.unit}</span>
+                        <span className="font-medium text-base flex-1">{ing.name}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
 
 {recipe.instructions && recipe.instructions.length > 0 && (
             <div>

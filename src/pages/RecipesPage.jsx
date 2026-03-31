@@ -44,6 +44,17 @@ export default function RecipesPage() {
           total_amount: current.total_amount + scaledAmount
         });
       });
+      if (recipe.dressing) {
+        recipe.dressing.forEach(ing => {
+          const key = `${ing.name.toLowerCase()}-${ing.unit.toLowerCase()}`;
+          const scaledAmount = ing.amount * scaleFactor;
+          const current = ingredientMap.get(key) || { name: ing.name, total_amount: 0, unit: ing.unit, category: getIngredientCategory(ing.name) };
+          ingredientMap.set(key, {
+            ...current,
+            total_amount: current.total_amount + scaledAmount
+          });
+        });
+      }
     });
 
     const listData = Array.from(ingredientMap.values());

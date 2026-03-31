@@ -6,6 +6,7 @@ import RecipeDetail from "./pages/RecipeDetail.jsx";
 import AddRecipePage from "./pages/AddRecipePage.jsx";
 import ShoppingListPage from "./pages/ShoppingListPage.jsx";
 import ShoppingListDetail from "./pages/ShoppingListDetail.jsx";
+import EditRecipePage from "./pages/EditRecipePage.jsx";
 import "./index.css";
 
 function App() {
@@ -107,6 +108,7 @@ function App() {
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/shopping-list" element={<ShoppingListPage />} />
             <Route path="/shopping-list/:id" element={<ShoppingListDetail />} />
+            <Route path="/edit-recipe/:id" element={<EditRecipePage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
