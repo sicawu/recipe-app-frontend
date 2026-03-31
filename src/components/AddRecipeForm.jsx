@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, X } from 'lucide-react';
 import { addRecipe } from '../services/recipeService';
-const CATEGORIES = ['Main Course', 'Breakfast', 'Dessert', 'Snack'];
-const DIFFICULTIES = ['Easy', 'Medium', 'Pro'];
+  const CATEGORIES = [
+    'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Main Course', 
+    'Side Dish', 'Snack', 'Drink', 'Dip', 'Sauce', 'Salad', 'Soup', 'Bake', 'Grill'
+  ];
+  const DIFFICULTIES = ['Easy', 'Medium', 'Pro'];
+  const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece', 'cup', 'handful', 'bunch'];
 
 export default function AddRecipeForm1({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -62,56 +66,72 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">Add New Recipe</h2>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-          <X className="w-6 h-6" />
-        </button>
-      </div>
+    <div className="sage-glass rounded-3xl shadow-2xl p-8 max-w-2xl mx-auto">
+      <h1 className="text-5xl font-bold leading-tight bg-gradient-to-r from-sage-600 via-sage-500 to-pinky-500 bg-clip-text text-transparent tracking-tight mb-6">
+        Add New Recipe
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            placeholder="Recipe Name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-          <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option value="">Category</option>
-            {CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-          <input
-            type="number"
-            placeholder="Prep Time (min)"
-            value={formData.prepTime}
-            onChange={(e) => setFormData({ ...formData, prepTime: Number(e.target.value) })}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="number"
-            placeholder="Cook Time (min)"
-            value={formData.cookTime}
-            onChange={(e) => setFormData({ ...formData, cookTime: Number(e.target.value) })}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="number"
-            placeholder="Servings"
-            value={formData.servings}
-            onChange={(e) => setFormData({ ...formData, servings: Number(e.target.value) })}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <select value={formData.difficulty} onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })} className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Pro">Pro</option>
-          </select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-semibold text-sage-700 mb-2">Recipe name</label>
+            <input
+              placeholder="e.g. Spaghetti Carbonara"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-sage-700 mb-2">Category</label>
+            <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm">
+              <option value="">Choose category</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-sage-700 mb-2">Prep time (minutes)</label>
+            <input
+              type="number"
+              placeholder="15"
+              value={formData.prepTime}
+              onChange={(e) => setFormData({ ...formData, prepTime: Number(e.target.value) })}
+              className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-sage-700 mb-2">Cook time (minutes)</label>
+            <input
+              type="number"
+              placeholder="20"
+              value={formData.cookTime}
+              onChange={(e) => setFormData({ ...formData, cookTime: Number(e.target.value) })}
+              className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+            />
+          </div>
+          {/* Duplicate prep/cook inputs removed - now labeled above */}
+          <div>
+            <label className="block text-sm font-semibold text-sage-700 mb-2">Servings (people)</label>
+            <input
+              type="number"
+              placeholder="4"
+              value={formData.servings}
+              onChange={(e) => setFormData({ ...formData, servings: Number(e.target.value) })}
+              className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-sage-700 mb-2">Difficulty</label>
+            <select value={formData.difficulty} onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })} className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm">
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Pro">Pro</option>
+            </select>
+          </div>
         </div>
 
         {/* Image */}
@@ -133,27 +153,24 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
 
         {/* Tags */}
         <div>
-          <label className="block text-sm font-medium mb-2">Tags</label>
-          <div className="flex gap-2 mb-2">
-            <input
-              placeholder="Add tag"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && addTag()}
-              className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
-            <button type="button" onClick={addTag} className="p-3 bg-fir-500 text-white rounded-lg hover:bg-fir-600">
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {formData.tags.map((tag, index) => (
-              <div key={index} className="flex items-center gap-1 bg-gray-200 px-3 py-1 rounded-full text-sm">
-                {tag}
-                <button onClick={() => removeTag(index)} className="text-scandi-500 hover:text-fir-600">
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+          <label className="block text-sm font-semibold text-sage-700 mb-4">Tags (select)</label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {['Vegan', 'Vegetarian', 'Gluten-free', 'Dairy-free', 'Low-carb', 'Quick', 'Healthy', 'Spicy', 'Sweet', 'Savory', 'Family-friendly', 'Budget'].map((tag) => (
+              <label key={tag} className="flex items-center gap-2 p-3 sage-glass rounded-xl cursor-pointer hover:shadow-md transition-all">
+                <input
+                  type="checkbox"
+                  checked={formData.tags.includes(tag)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFormData({ ...formData, tags: [...formData.tags, tag] });
+                    } else {
+                      setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
+                    }
+                  }}
+                  className="w-4 h-4 text-pinky-500 rounded focus:ring-pinky-400"
+                />
+                <span className="text-sm">{tag}</span>
+              </label>
             ))}
           </div>
         </div>
@@ -175,12 +192,12 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               onChange={(e) => setNewIngredient({ ...newIngredient, amount: Number(e.target.value) })}
               className="w-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
-            <input
-              placeholder="Unit (g, cups, etc)"
-              value={newIngredient.unit}
-              onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })}
-              className="w-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            />
+            <select value={newIngredient.unit} onChange={(e) => setNewIngredient({ ...newIngredient, unit: e.target.value })} className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm">
+              <option value="">Unit</option>
+              {UNITS.map((u) => (
+                <option key={u} value={u}>{u}</option>
+              ))}
+            </select>
             <button type="button" onClick={addIngredient} className="p-3 bg-fir-500 text-white rounded-lg hover:bg-fir-600">
               <Plus className="w-4 h-4" />
             </button>

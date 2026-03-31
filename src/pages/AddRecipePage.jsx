@@ -21,12 +21,10 @@ export default function AddRecipePage() {
           Back to Recipes
         </button>
         
-        <div className="sage-glass rounded-3xl shadow-2xl p-8">
-          <AddRecipeForm 
+        <AddRecipeForm 
             onClose={() => navigate('/recipes')}
             onSuccess={handleSuccess}
           />
-        </div>
       </div>
     </div>
   );
