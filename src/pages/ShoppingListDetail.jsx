@@ -8,12 +8,19 @@ export default function ShoppingListDetail() {
   const { id } = useParams();
   const [shoppingList, setShoppingList] = useState(null);
   const [recipes, setRecipes] = useState([]);
-  const [checkedIngredients, setCheckedIngredients] = useState(new Set());
+  const [checkedIngredients, setCheckedIngredients] = useState(new Set(JSON.parse(localStorage.getItem(`shoppinglist-checked-${id}`) || '[]')));
 
   useEffect(() => {
     loadList();
     getRecipes().then(setRecipes);
   }, [id]); // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const saved = localStorage.getItem(`shoppinglist-checked-${id}`);
+    if (saved) {
+      setCheckedIngredients(new Set(JSON.parse(saved)));
+    }
+  }, [id]);
 
   const loadList = async () => {
     try {
@@ -28,8 +35,11 @@ export default function ShoppingListDetail() {
     const colors = {
       'Pantry': 'bg-amber-100 text-amber-800',
       'Dairy': 'bg-blue-100 text-blue-800',
-      'Meat & Fish': 'bg-red-100 text-red-800',
+      'Meat': 'bg-gradient-to-r from-pink-300 to-red-100 text-pink-600',
+      'Meat & Fish': 'bg-gradient-to-r from-pink-200 to-red-100 text-pink-800',
       'Produce': 'bg-green-100 text-green-800',
+      'Others': 'bg-gray-100 text-gray-800',
+      'Drinks': 'bg-blue-200 text-blue-800',
       'Other': 'bg-gray-100 text-gray-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
@@ -61,6 +71,7 @@ export default function ShoppingListDetail() {
       newChecked.add(index);
     }
     setCheckedIngredients(newChecked);
+    localStorage.setItem(`shoppinglist-checked-${id}`, JSON.stringify(Array.from(newChecked)));
   };
 
 
@@ -98,25 +109,25 @@ export default function ShoppingListDetail() {
               {sortedGroups.map((category) => {
                 const items = groupedIngredients[category].sort((a, b) => a.name.localeCompare(b.name));
                 return (
-                  <div key={category} className={`${getIngredientCategoryColor(category).split(' ')[0]} rounded-3xl p-8 shadow-2xl ring-1 ring-white/20`}>
-                    <div className={`mb-6 p-4 rounded-2xl font-bold text-xl ${getIngredientCategoryColor(category).split(' ')[1]} bg-white/20 backdrop-blur-sm`}>
+                  <div key={category} className={`${getIngredientCategoryColor(category).split(' ')[0]} rounded-2xl p-4 shadow-xl ring-1 ring-white/30`}>
+                    <div className={`mb-3 p-2 rounded-xl font-bold text-lg ${getIngredientCategoryColor(category).split(' ')[1]} bg-white/30 backdrop-blur-sm`}>
                       {category} ({items.length})
                     </div>
-                    <div className="space-y-4">
+                    <div className="space-y-2">
                       {items.map((ing, j) => {
                         const globalIndex = `${category}-${j}`; // unique key for checked state
                         const isChecked = checkedIngredients.has(globalIndex);
                         return (
-                          <div key={j} className="flex items-center gap-4 p-4 bg-white/20 backdrop-blur-sm rounded-2xl hover:bg-white/30 transition-all">
+                          <div key={j} className="flex items-center gap-3 p-2 bg-white/30 backdrop-blur-sm rounded-xl hover:bg-white/50 transition-all">
                             <input
                               type="checkbox"
                               checked={isChecked}
                               onChange={() => toggleChecked(globalIndex)}
-                              className="w-6 h-6 rounded-lg bg-white border-2 border-white shadow-md focus:ring-2 focus:ring-sage-400"
+                              className="w-5 h-5 rounded-lg bg-white border-2 border-white shadow-sm focus:ring-2 focus:ring-sage-400"
                             />
                             <div className={`flex-1 flex justify-between ${isChecked ? 'line-through decoration-2' : ''}`}>
-                              <span className="font-semibold text-lg">{ing.name}</span>
-                              <span className="font-bold text-xl">{ing.total_amount.toFixed(1)} {ing.unit}</span>
+                              <span className="font-medium text-base">{ing.name}</span>
+                              <span className="font-bold text-base">{ing.total_amount.toFixed(1)} {ing.unit}</span>
                             </div>
                           </div>
                         );
