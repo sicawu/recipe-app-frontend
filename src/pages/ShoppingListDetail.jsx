@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Users } from 'lucide-react';
 import { getShoppingListById, getRecipes } from '../services/recipeService.jsx';
-import ShoppingList from '../components/ShoppingList.jsx';
+// import ShoppingList from '../components/ShoppingList.jsx';
 
 export default function ShoppingListDetail() {
   const { id } = useParams();
   const [shoppingList, setShoppingList] = useState(null);
   const [recipes, setRecipes] = useState([]);
+  const [checkedIngredients, setCheckedIngredients] = useState(new Set());
 
   useEffect(() => {
     loadList();
     getRecipes().then(setRecipes);
-  }, [id]);
+  }, [id]); // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const loadList = async () => {
     try {
@@ -38,14 +39,30 @@ export default function ShoppingListDetail() {
     return <div>Loading...</div>;
   }
 
-  const categoryOrder = ['Produce', 'Dairy', 'Meat', 'Bakery', 'Pantry', 'Other'];
-  const getCategoryPriority = (cat) => categoryOrder.indexOf(cat);
-  const sortedIngredients = [...shoppingList.ingredients].sort((a, b) => {
-    const catA = getCategoryPriority(a.category) === -1 ? 99 : getCategoryPriority(a.category);
-    const catB = getCategoryPriority(b.category) === -1 ? 99 : getCategoryPriority(b.category);
-    if (catA !== catB) return catA - catB;
-    return a.name.localeCompare(b.name);
-  });
+  const groupedIngredients = shoppingList.ingredients.reduce((acc, ing) => {
+    const cat = ing.category || 'Other';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(ing);
+    return acc;
+  }, {});
+
+  const categoryOrder = ['Produce', 'Dairy', 'Meat', 'Pantry', 'Others', 'Drinks'];
+  const getCategoryPriority = (cat) => {
+    const index = categoryOrder.indexOf(cat);
+    return index === -1 ? 99 : index;
+  };
+  const sortedGroups = Object.keys(groupedIngredients).sort((a, b) => getCategoryPriority(a) - getCategoryPriority(b));
+
+  const toggleChecked = (index) => {
+    const newChecked = new Set(checkedIngredients);
+    if (newChecked.has(index)) {
+      newChecked.delete(index);
+    } else {
+      newChecked.add(index);
+    }
+    setCheckedIngredients(newChecked);
+  };
+
 
 
   return (
@@ -78,28 +95,36 @@ export default function ShoppingListDetail() {
               🛒 Shopping List
             </h2>
             <div className="space-y-4">
-              {(() => {
-                const grouped = sortedIngredients.reduce((acc, ing) => {
-                  acc[ing.category] = acc[ing.category] || [];
-                  acc[ing.category].push(ing);
-                  return acc;
-                }, {});
-                return Object.entries(grouped).map(([category, items]) => (
-                  <div key={category} className="sage-glass rounded-2xl p-6">
-                    <div className={`inline-block px-4 py-2 rounded-xl font-semibold mb-4 ${getIngredientCategoryColor(category)}`}>
+              {sortedGroups.map((category) => {
+                const items = groupedIngredients[category].sort((a, b) => a.name.localeCompare(b.name));
+                return (
+                  <div key={category} className={`${getIngredientCategoryColor(category).split(' ')[0]} rounded-3xl p-8 shadow-2xl ring-1 ring-white/20`}>
+                    <div className={`mb-6 p-4 rounded-2xl font-bold text-xl ${getIngredientCategoryColor(category).split(' ')[1]} bg-white/20 backdrop-blur-sm`}>
                       {category} ({items.length})
                     </div>
-                    <div className="space-y-3">
-                      {items.map((ing, i) => (
-                        <div key={i} className="flex justify-between items-center p-3 bg-white/50 rounded-xl backdrop-blur-sm border border-sage-200 hover:bg-white transition-colors">
-                          <span className="font-medium">{ing.name}</span>
-                          <span className="font-bold text-lg">{ing.total_amount.toFixed(1)} {ing.unit}</span>
-                        </div>
-                      ))}
+                    <div className="space-y-4">
+                      {items.map((ing, j) => {
+                        const globalIndex = `${category}-${j}`; // unique key for checked state
+                        const isChecked = checkedIngredients.has(globalIndex);
+                        return (
+                          <div key={j} className="flex items-center gap-4 p-4 bg-white/20 backdrop-blur-sm rounded-2xl hover:bg-white/30 transition-all">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => toggleChecked(globalIndex)}
+                              className="w-6 h-6 rounded-lg bg-white border-2 border-white shadow-md focus:ring-2 focus:ring-sage-400"
+                            />
+                            <div className={`flex-1 flex justify-between ${isChecked ? 'line-through decoration-2' : ''}`}>
+                              <span className="font-semibold text-lg">{ing.name}</span>
+                              <span className="font-bold text-xl">{ing.total_amount.toFixed(1)} {ing.unit}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                ));
-              })()}
+                );
+              })}
             </div>
           </div>
 
