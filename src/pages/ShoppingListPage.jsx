@@ -69,7 +69,8 @@ export default function ShoppingListPage() {
                 </div>
               </div>
               <div className="space-y-2 mb-4">
-                {list.ingredients.slice(0, 3).map((ing, i) => (
+                {list.ingredients.slice(0, 3).sort((a, b) => a.name.localeCompare(b.name)).map((ing, i) => (
+
                   <div key={i} className="flex items-center gap-2 text-sm">
                     <span className="w-2 h-2 bg-sage-500 rounded-full"></span>
                     <span>{ing.name} ({ing.total_amount.toFixed(1)} {ing.unit})</span>

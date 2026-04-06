@@ -7,7 +7,7 @@ const CATEGORIES = [
   'Side Dish', 'Snack', 'Drink', 'Dip', 'Sauce', 'Salad', 'Soup', 'Bake', 'Grill', 'Bread'
 ];
 const DIFFICULTIES = ['Easy', 'Medium', 'Pro'];
-const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece(s)', 'cup(s)', 'handful', 'bunch', 'oz'];
+const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece(s)', 'cup(s)', 'can(s)', 'bag', 'handful', 'bunch', 'pinch', 'oz'];
 
 export default function AddRecipeForm1({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({

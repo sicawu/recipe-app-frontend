@@ -38,7 +38,15 @@ export default function ShoppingListDetail() {
     return <div>Loading...</div>;
   }
 
-  const sortedIngredients = [...shoppingList.ingredients].sort((a, b) => a.category.localeCompare(b.category));
+  const categoryOrder = ['Produce', 'Dairy', 'Meat', 'Bakery', 'Pantry', 'Other'];
+  const getCategoryPriority = (cat) => categoryOrder.indexOf(cat);
+  const sortedIngredients = [...shoppingList.ingredients].sort((a, b) => {
+    const catA = getCategoryPriority(a.category) === -1 ? 99 : getCategoryPriority(a.category);
+    const catB = getCategoryPriority(b.category) === -1 ? 99 : getCategoryPriority(b.category);
+    if (catA !== catB) return catA - catB;
+    return a.name.localeCompare(b.name);
+  });
+
 
   return (
     <div className="min-h-screen sagepink-gradient py-12 px-6">

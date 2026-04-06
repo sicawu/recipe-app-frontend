@@ -1,11 +1,24 @@
 import React from "react";
 
 export default function ShoppingList({ shoppingList }) {
+  const categoryOrder = ['Produce', 'Dairy', 'Meat', 'Bakery', 'Pantry', 'Other'];
   const grouped = shoppingList.reduce((acc, item) => {
     if (!acc[item.category]) acc[item.category] = [];
     acc[item.category].push(item);
     return acc;
   }, {});
+  const sortedGroups = Object.keys(grouped).sort((a, b) => {
+    const priA = categoryOrder.indexOf(a);
+    const priB = categoryOrder.indexOf(b);
+    if (priA === -1 && priB === -1) return a.localeCompare(b);
+    if (priA === -1) return 1;
+    if (priB === -1) return -1;
+    return priA - priB;
+  }).reduce((acc, cat) => {
+    acc[cat] = grouped[cat].sort((a, b) => a.name.localeCompare(b.name));
+    return acc;
+  }, {});
+
 
   if (!shoppingList.length) return null;
 

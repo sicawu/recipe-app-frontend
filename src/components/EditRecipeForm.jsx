@@ -284,6 +284,7 @@ export default function EditRecipeForm() {
                 <option value="">Category</option>
                 <option value="Produce">Produce</option>
                 <option value="Dairy">Dairy</option>
+                <option value="Drinks">Drinks</option>
                 <option value="Pantry">Pantry</option>
                 <option value="Meat">Meat</option>
                 <option value="Bakery">Bakery</option>
