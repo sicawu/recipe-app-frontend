@@ -1,9 +1,20 @@
-# Category Dropdown Standardization Task
+# ShoppingListDetail - Remove Edit Button, Add Recipe Manager at Recipes Section
 
-## Steps:
-- [ ] Step 1: Create this TODO.md and confirm creation
-- [x] Step 2: Edit src/components/DressingForm.jsx to add category field to newDressingIng state, input row, and display
-- [x] Step 3: Edit src/components/EditRecipeForm.jsx to standardize ingredients category select design and label
-- [x] Step 4: Edit src/components/AddRecipeForm.jsx for consistency in ingredients category
-- [x] Step 5: Verify alignment and test
-- [x] Step 6: Mark complete and attempt_completion
+Status: In Progress
+
+## Approved Plan Summary
+- Remove header Edit button and full edit mode.
+- Add 'Manage Recipes' button at 'Recipes Included' section.
+- Use single RecipeList with all recipes (toggle select current ones) for add/remove.
+- Save updates recipeIds via updateShoppingList.
+
+## Implementation Steps
+### 1. Remove edit-related states/functions, simplify header [COMPLETE]
+### 2. Add showRecipeManager state + toggle handler [COMPLETE]
+### 3. Add Manage button + RecipeList section [COMPLETE]
+### 4. Implement save logic with updateShoppingList + refresh [COMPLETE]
+### 5. Update TODO.md as complete [COMPLETE]
+### 6. Test & attempt_completion [PENDING]
+
+Next step: Edit ShoppingListDetail.jsx for Step 1-4.
+

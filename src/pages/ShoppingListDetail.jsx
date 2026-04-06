@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Users } from 'lucide-react';
-import { getShoppingListById, getRecipes } from '../services/recipeService.jsx';
-// import ShoppingList from '../components/ShoppingList.jsx';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Users, Trash2, Plus, Save, X } from 'lucide-react';
+import { getShoppingListById, getRecipes, deleteShoppingList, updateShoppingList } from '../services/recipeService.jsx';
+import RecipeList from '../components/RecipeList.jsx';
 
 export default function ShoppingListDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [shoppingList, setShoppingList] = useState(null);
   const [recipes, setRecipes] = useState([]);
   const [checkedIngredients, setCheckedIngredients] = useState(new Set(JSON.parse(localStorage.getItem(`shoppinglist-checked-${id}`) || '[]')));
+  const [showRecipeManager, setShowRecipeManager] = useState(false);
+  const [recipeSelectedIds, setRecipeSelectedIds] = useState([]);
+
+  const currentRecipeIds = shoppingList?.recipeIds || [];
+
+  useEffect(() => {
+    if (shoppingList?.recipeIds) {
+      setRecipeSelectedIds(shoppingList.recipeIds);
+    }
+  }, [shoppingList]);
 
   useEffect(() => {
     loadList();
     getRecipes().then(setRecipes);
-  }, [id]); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   useEffect(() => {
     const saved = localStorage.getItem(`shoppinglist-checked-${id}`);
@@ -74,16 +85,34 @@ export default function ShoppingListDetail() {
     localStorage.setItem(`shoppinglist-checked-${id}`, JSON.stringify(Array.from(newChecked)));
   };
 
+  const toggleRecipeManager = () => setShowRecipeManager(!showRecipeManager);
 
+  const handleRecipeSave = async () => {
+    try {
+      const updated = await updateShoppingList(id, { recipeIds: recipeSelectedIds });
+      setShoppingList(updated);
+      setShowRecipeManager(false);
+      await loadList();
+    } catch (err) {
+      alert('Failed to save recipe changes');
+      console.error(err);
+    }
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('Delete this shopping list? This cannot be undone.')) {
+      deleteShoppingList(id).then(() => navigate('/shopping-list'));
+    }
+  };
 
   return (
     <div className="min-h-screen sagepink-gradient py-12 px-6">
       <div className="max-w-5xl mx-auto">
-        <Link 
-          to="/shopping-list" 
-          className="inline-flex items-center gap-2 mb-8 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage px-8 py-4 rounded-2xl"
+        <Link
+          to="/shopping-list"
+          className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage mb-8 rounded-full px-6 py-2 text-sm shadow-lg"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4" />
           Back to Lists
         </Link>
 
@@ -91,14 +120,16 @@ export default function ShoppingListDetail() {
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="handwritten text-5xl font-bold bg-gradient-to-r from-sage-600 to-pinky-500 bg-clip-text text-transparent mb-4">
-              {shoppingList.name}
-            </h1>
+                {shoppingList.name}
+              </h1>
             <div className="flex flex-wrap gap-4 justify-center text-sm text-gray-600 mb-8">
               <span className="flex items-center gap-1"><Users className="w-4 h-4" />{shoppingList.guests} guests</span>
               <span>{new Date(shoppingList.date).toLocaleDateString()}</span>
-              <span>{shoppingList.recipeIds.length} recipes</span>
+              <span>{currentRecipeIds.length} recipes</span>
             </div>
           </div>
+
+
 
           {/* Simple categorized shopping list */}
           <div>
@@ -115,7 +146,7 @@ export default function ShoppingListDetail() {
                     </div>
                     <div className="space-y-2">
                       {items.map((ing, j) => {
-                        const globalIndex = `${category}-${j}`; // unique key for checked state
+                        const globalIndex = `${category}-${j}`;
                         const isChecked = checkedIngredients.has(globalIndex);
                         return (
                           <div key={j} className="flex items-center gap-3 p-2 bg-white/30 backdrop-blur-sm rounded-xl hover:bg-white/50 transition-all">
@@ -141,12 +172,12 @@ export default function ShoppingListDetail() {
 
           {/* Recipes Included */}
           <div>
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              📖 Recipes Included
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recipes.filter(r => shoppingList.recipeIds.includes(r.id)).map(recipe => (
-                <Link 
+            <h2 className="text-2xl font-bold mb-6 flex gap-2">
+                📖 Recipes Included ({currentRecipeIds.length})
+              </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              {recipes.filter(r => currentRecipeIds.includes(r.id)).map(recipe => (
+                <Link
                   key={recipe.id}
                   to={`/recipes/${recipe.id}`}
                   className="sage-glass rounded-2xl p-6 hover:shadow-glow-sage hover:-translate-y-1 transition-all group"
@@ -157,10 +188,20 @@ export default function ShoppingListDetail() {
                 </Link>
               ))}
             </div>
+
+            <div className="flex justify-center mt-12">
+              <button onClick={handleDelete} className="flex items-center gap-2 px-8 py-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-all shadow-xl hover:shadow-glow-red text-lg font-semibold">
+                <Trash2 className="w-5 h-5" />
+                Delete Shopping List
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+
+
 

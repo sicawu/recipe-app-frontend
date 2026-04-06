@@ -267,7 +267,7 @@ export default function EditRecipeForm() {
 
           {/* Ingredients */}
           <div>
-            <label className="block text-sm font-medium text-sage-700 mb-4">Ingredients</label>
+            <label className="block text-sm font-semibold text-sage-700 mb-4">Ingredients</label>
             <div className="flex gap-2 mb-4">
               <input
                 type="text"
@@ -328,7 +328,7 @@ export default function EditRecipeForm() {
 
           {/* Instructions */}
           <div>
-            <label className="block text-sm font-medium text-sage-700 mb-4">Instructions</label>
+            <label className="block text-sm font-semibold text-sage-700 mb-4">Instructions</label>
             <div className="flex gap-2 mb-4">
               <textarea
                 placeholder="Step 1: Pre-heat oven..."

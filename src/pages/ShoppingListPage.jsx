@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { getShoppingLists, deleteShoppingList } from '../services/recipeService.jsx';
+import { getShoppingLists, deleteShoppingList, getRecipes } from '../services/recipeService.jsx';
 import { ArrowLeft, Users, ShoppingBag } from 'lucide-react';
 import ShoppingList from '../components/ShoppingList.jsx';
 
@@ -11,6 +11,7 @@ export default function ShoppingListPage() {
   const [shoppingLists, setShoppingLists] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
   const [guests, setGuests] = useState(2);
+  const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
     loadLists();
@@ -24,6 +25,8 @@ export default function ShoppingListPage() {
         setSelectedList(lists[0]);
         setGuests(lists[0].guests || 2);
       }
+      const allRecipes = await getRecipes();
+      setRecipes(allRecipes);
     } catch (err) {
       console.error('Failed to load shopping lists:', err);
     }
@@ -44,7 +47,7 @@ export default function ShoppingListPage() {
         <div className="flex items-center justify-between mb-8">
           <button 
             onClick={() => navigate('/recipes')}
-            className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-pinky-500 to-sage-500 text-white hover:shadow-glow-pinky rounded-2xl px-6 py-3"
+className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-pinky-500 to-sage-500 text-white hover:shadow-glow-pinky rounded-full px-6 py-2 text-sm shadow-lg"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Recipes
@@ -69,26 +72,19 @@ export default function ShoppingListPage() {
                 </div>
               </div>
               <div className="space-y-2 mb-4">
-                {list.ingredients.slice(0, 3).sort((a, b) => a.name.localeCompare(b.name)).map((ing, i) => (
-
-                  <div key={i} className="flex items-center gap-2 text-sm">
-                    <span className="w-2 h-2 bg-sage-500 rounded-full"></span>
-                    <span>{ing.name} ({ing.total_amount.toFixed(1)} {ing.unit})</span>
-                  </div>
-                ))}
-                {list.ingredients.length > 3 && <p className="text-sm text-gray-500">+{list.ingredients.length - 3} more...</p>}
+                {list.recipeIds.slice(0, 3).map((recipeId) => {
+                  const recipe = recipes.find(r => r.id === recipeId);
+                  return recipe ? (
+                    <div key={recipeId} className="flex items-center gap-2 text-sm truncate">
+                      <span className="w-2 h-2 bg-sage-500 rounded-full"></span>
+                      <span>{recipe.name}</span>
+                    </div>
+                  ) : null;
+                })}
+                {list.recipeIds.length > 3 && <p className="text-sm text-gray-500">+{list.recipeIds.length - 3} more recipes...</p>}
               </div>
               <div className="flex items-center justify-between pt-4 border-t border-sage-200">
                 <span className="text-sm text-gray-500">Click for details</span>
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    deleteList(list._id);
-                  }}
-                  className="text-red-500 hover:text-red-700 px-3 py-1 rounded-lg hover:bg-red-50 text-sm"
-                >
-                  Delete
-                </button>
               </div>
             </Link>
           ))}

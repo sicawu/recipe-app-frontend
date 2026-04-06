@@ -23,3 +23,5 @@ export const getShoppingLists = () => api.get('/shopping-lists').then(res => res
 export const getShoppingListById = (id) => api.get(`/shopping-lists/${id}`).then(res => res.data);
 
 export const deleteShoppingList = (id) => api.delete(`/shopping-lists/${id}`).then(res => res.data);
+
+export const updateShoppingList = (id, data) => api.put(`/shopping-lists/${id}`, data).then(res => res.data);
