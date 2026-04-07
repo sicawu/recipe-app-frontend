@@ -1,20 +1,19 @@
-# ShoppingListDetail - Remove Edit Button, Add Recipe Manager at Recipes Section
+# Fixed Amount Feature ✅ COMPLETE
 
-Status: In Progress
+**Backend updated:** Added `fixedAmount: {type: Boolean, default: false}` to Recipe model.
 
-## Approved Plan Summary
-- Remove header Edit button and full edit mode.
-- Add 'Manage Recipes' button at 'Recipes Included' section.
-- Use single RecipeList with all recipes (toggle select current ones) for add/remove.
-- Save updates recipeIds via updateShoppingList.
+**Frontend changes:**
+- Add/Edit forms: `fixedAmount` field + checkbox UI
+- RecipesPage.jsx: `scaleFactor = recipe.fixedAmount ? 1 : guests/recipe.servings`
+- RecipeDetail.jsx: same for ingredients/dressing display
 
-## Implementation Steps
-### 1. Remove edit-related states/functions, simplify header [COMPLETE]
-### 2. Add showRecipeManager state + toggle handler [COMPLETE]
-### 3. Add Manage button + RecipeList section [COMPLETE]
-### 4. Implement save logic with updateShoppingList + refresh [COMPLETE]
-### 5. Update TODO.md as complete [COMPLETE]
-### 6. Test & attempt_completion [PENDING]
+**Restart services:**
+1. Backend: Ctrl+C → `node index.js` (or `npm start`)
+2. Frontend: `npm start`
 
-Next step: Edit ShoppingListDetail.jsx for Step 1-4.
+**Test:**
+1. Add "Bread" recipe → ✓ Fixed amounts → save
+2. Recipes → select → generate list → change "Guests" → amounts FIXED!
+3. Detail page → servings slider → amounts FIXED!
 
+Now works end-to-end. Edit feature restored + fixedAmount prevents scaling.

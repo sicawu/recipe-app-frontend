@@ -34,7 +34,7 @@ export default function RecipesPage() {
     const ingredientMap = new Map();
 
     selectedRecipes.forEach(recipe => {
-      const scaleFactor = guests / recipe.servings;
+      const scaleFactor = recipe.fixedAmount ? 1 : guests / recipe.servings;
       recipe.ingredients.forEach(ing => {
         const key = `${ing.name.toLowerCase()}-${ing.unit.toLowerCase()}`;
         const scaledAmount = ing.amount * scaleFactor;

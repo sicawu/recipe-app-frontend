@@ -10,10 +10,10 @@ export default function RecipeDetail() {
   const [loading, setLoading] = useState(true);
   const [guestServings, setGuestServings] = useState(recipe ? recipe.servings : 1);
 
-useEffect(() => {
+  useEffect(() => {
     const loadRecipe = async () => {
       if (!id) return;
-      
+
       try {
         setLoading(true);
         const recipeData = await getRecipeById(id);
@@ -61,27 +61,27 @@ useEffect(() => {
       <div className="max-w-5xl mx-auto sage-glass rounded-3xl shadow-2xl overflow-hidden">
         {/* Header & Back */}
         <div className="p-10 border-b border-sage-200/50 relative">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center gap-2 gamification-btn bg-gradient-to-r from-sage-500 to-pinky-500 text-white hover:shadow-glow-sage mb-8 rounded-full px-6 py-2 text-sm shadow-lg"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Recipes
           </Link>
 
-          <Link 
+          <Link
             to={`/edit-recipe/${recipe.id}`}
             className="absolute top-4 right-4 gamification-btn bg-gradient-to-r from-pinky-500 to-sage-500 text-white hover:shadow-glow-pinky w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 transition-all"
           >
             <Pencil className="w-6 h-6" />
           </Link>
-          
+
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h1 className="handwritten text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent mb-4">
                 {recipe.name}
               </h1>
-{recipe.category && (
+              {recipe.category && (
                 <span className="px-4 py-2 bg-gradient-to-r from-fir-500 to-sage-500 text-white rounded-full text-sm font-medium mr-3 shadow-md">
                   {recipe.category}
                 </span>
@@ -131,74 +131,74 @@ useEffect(() => {
 
         <div className="p-8 space-y-8">
 
-            {/* Short description */}
-            {recipe.description && (
-              <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                {recipe.description}
-              </p>
-            )}
+          {/* Short description */}
+          {recipe.description && (
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              {recipe.description}
+            </p>
+          )}
 
-            {/* Tags - pink design like overview selected category */}
-            {recipe.tags && recipe.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {recipe.tags.map(tag => (
-                  <span key={tag} className="px-3 py-1 bg-gradient-to-r from-pinky-600/30 to-pinky-500/30 backdrop-blur-sm text-white rounded-full text-sm font-semibold sage-glass border border-pinky-300/50">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <h2 className="handwritten text-3xl font-bold mb-1 bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent">Ingredients</h2>
-
-            {/* Tiny servings adjuster */}
-            <div className="flex items-center gap-3 px-3 sage-glass rounded-xl mb-2">
-              <label className="font-medium text-sm text-gray-700">For</label>
-              <input
-                type="number"
-                min="1"
-                max="20"
-                value={guestServings}
-                onChange={(e) => setGuestServings(Number(e.target.value))}
-                className="sage-glass rounded-lg px-3 w-16 text-sm font-bold text-sage-700 border border-sage-300 focus:ring-1 focus:ring-pinky-400 text-center"
-              />
-              <span className="text-sm text-gray-600">people</span>
+          {/* Tags - pink design like overview selected category */}
+          {recipe.tags && recipe.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {recipe.tags.map(tag => (
+                <span key={tag} className="px-3 py-1 bg-gradient-to-r from-pinky-600/30 to-pinky-500/30 backdrop-blur-sm text-white rounded-full text-sm font-semibold sage-glass border border-pinky-300/50">
+                  {tag}
+                </span>
+              ))}
             </div>
+          )}
 
-            <ul className="space-y-2">
-              {recipe.ingredients.map((ing, index) => {
-                const scaleFactor = guestServings / recipe.servings;
-                const scaledAmount = Math.round(ing.amount * scaleFactor * 10) / 10;
-                return (
-                  <li key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl">
-                    <span className="font-bold text-base text-sage-600 flex-shrink-0">{scaledAmount}</span>
-                    <span className="font-bold text-base bg-gradient-to-r from-sage-500 to-pinky-500 bg-clip-text text-transparent flex-shrink-0">{ing.unit}</span>
-                    <span className="font-medium text-base flex-1">{ing.name}</span>
-                  </li>
-                );
-              })}
-            </ul>
+          <h2 className="handwritten text-3xl font-bold mb-1 bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent">Ingredients</h2>
 
-            {recipe.dressing && recipe.dressing.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-sage-200">
-                <h3 className="handwritten text-2xl font-bold mb-4 bg-gradient-to-r from-pinky-500 to-sage-500 bg-clip-text text-transparent">🥗 Dressing</h3>
-                <ul className="space-y-2">
-                  {recipe.dressing.map((ing, index) => {
-                    const scaleFactor = guestServings / recipe.servings;
-                    const scaledAmount = Math.round(ing.amount * scaleFactor * 10) / 10;
-                    return (
-                      <li key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl bg-gradient-to-r from-pinky-50 to-sage-50">
-                        <span className="font-bold text-base text-sage-600 flex-shrink-0">{scaledAmount}</span>
-                        <span className="font-bold text-base bg-gradient-to-r from-pinky-500 to-sage-500 bg-clip-text text-transparent flex-shrink-0">{ing.unit}</span>
-                        <span className="font-medium text-base flex-1">{ing.name}</span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
+          {/* Tiny servings adjuster */}
+          <div className="flex items-center gap-3 px-3 sage-glass rounded-xl mb-2">
+            <label className="font-medium text-sm text-gray-700">For</label>
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={guestServings}
+              onChange={(e) => setGuestServings(Number(e.target.value))}
+              className="sage-glass rounded-lg px-3 w-16 text-sm font-bold text-sage-700 border border-sage-300 focus:ring-1 focus:ring-pinky-400 text-center"
+            />
+            <span className="text-sm text-gray-600">people</span>
+          </div>
 
-{recipe.instructions && recipe.instructions.length > 0 && (
+          <ul className="space-y-2">
+            {recipe.ingredients.map((ing, index) => {
+              const scaleFactor = recipe.fixedAmount ? 1 : guestServings / recipe.servings;
+              const scaledAmount = Math.round(ing.amount * scaleFactor * 10) / 10;
+              return (
+                <li key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl">
+                  <span className="font-bold text-base text-sage-600 flex-shrink-0">{scaledAmount}</span>
+                  <span className="font-bold text-base bg-gradient-to-r from-sage-500 to-pinky-500 bg-clip-text text-transparent flex-shrink-0">{ing.unit}</span>
+                  <span className="font-medium text-base flex-1">{ing.name}</span>
+                </li>
+              );
+            })}
+          </ul>
+
+          {recipe.dressing && recipe.dressing.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-sage-200">
+              <h3 className="handwritten text-2xl font-bold mb-4 bg-gradient-to-r from-pinky-500 to-sage-500 bg-clip-text text-transparent">🥗 Dressing, Sauces & Marinade</h3>
+              <ul className="space-y-2">
+                {recipe.dressing.map((ing, index) => {
+                  const scaleFactor = recipe.fixedAmount ? 1 : guestServings / recipe.servings;
+                  const scaledAmount = Math.round(ing.amount * scaleFactor * 10) / 10;
+                  return (
+                    <li key={index} className="flex items-center gap-3 p-3 sage-glass rounded-xl bg-gradient-to-r from-pinky-50 to-sage-50">
+                      <span className="font-bold text-base text-sage-600 flex-shrink-0">{scaledAmount}</span>
+                      <span className="font-bold text-base bg-gradient-to-r from-pinky-500 to-sage-500 bg-clip-text text-transparent flex-shrink-0">{ing.unit}</span>
+                      <span className="font-medium text-base flex-1">{ing.name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+
+          {recipe.instructions && recipe.instructions.length > 0 && (
             <div>
               <h2 className="handwritten text-3xl font-bold mb-6 bg-gradient-to-r from-sage-600 via-pinky-500 to-sage-600 bg-clip-text text-transparent">Instructions</h2>
               <div className="space-y-6">

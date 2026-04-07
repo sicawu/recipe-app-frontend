@@ -34,9 +34,12 @@ export default function RecipeList({
     );
   }, [setSelectedIds]);
 
-  const selectedRecipes = useMemo(() => 
-    recipes.filter(recipe => selectedIds.includes(recipe.id)),
-  [recipes, selectedIds]);
+  const selectedRecipes = useMemo(() => {
+    return recipes.filter(recipe => selectedIds.includes(recipe.id)).map(recipe => ({
+      ...recipe,
+      scaleFactor: recipe.fixedAmount ? 1 : guestCount / recipe.servings
+    }));
+  }, [recipes, selectedIds, guestCount]);
 
   return (
     <div className="space-y-8">

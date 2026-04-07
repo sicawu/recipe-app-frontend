@@ -3,7 +3,7 @@ import { Plus, Trash2 } from 'lucide-react';
 
 const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece', 'cup', 'handful', 'bunch'];
 
-export default function DressingForm({ dressing, onDressingChange, title = 'Dressing Ingredients' }) {
+export default function DressingForm({ dressing, onDressingChange, title = 'Dressing, Sauces & Marinade' }) {
 const [newDressingIng, setNewDressingIng] = React.useState({ name: '', category: '', amount: 0, unit: '' });
 
   const addDressingIng = () => {
@@ -40,6 +40,8 @@ const [newDressingIng, setNewDressingIng] = React.useState({ name: '', category:
           <option value="Pantry">Pantry</option>
           <option value="Meat">Meat</option>
           <option value="Bakery">Bakery</option>
+          <option value="Alcohol">Alcohol</option>
+          <option value="Spices & Herbs">Spices & Herbs</option>
           <option value="Other">Other</option>
         </select>
         <input

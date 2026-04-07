@@ -14,6 +14,8 @@ const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece', 'cup', 'handful', '
 export default function EditRecipeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -21,6 +23,7 @@ export default function EditRecipeForm() {
     prepTime: 0,
     cookTime: 0,
     servings: 4,
+    fixedAmount: false,
     imageUrl: '',
     tags: [],
     description: '',
@@ -32,8 +35,6 @@ export default function EditRecipeForm() {
   const [newTag, setNewTag] = useState('');
   const [newIngredient, setNewIngredient] = useState({ name: '', category: '', amount: 0, unit: '' });
   const [newInstruction, setNewInstruction] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const loadRecipe = async () => {
@@ -46,6 +47,7 @@ export default function EditRecipeForm() {
           prepTime: recipe.prepTime || 0,
           cookTime: recipe.cookTime || 0,
           servings: recipe.servings || 4,
+          fixedAmount: recipe.fixedAmount || false,
           imageUrl: recipe.imageUrl || '',
           tags: recipe.tags || [],
           description: recipe.description || '',
@@ -60,7 +62,7 @@ export default function EditRecipeForm() {
         setLoading(false);
       }
     };
-    loadRecipe();
+    if (id) loadRecipe();
   }, [id]);
 
   const handleSubmit = async (e) => {
@@ -182,6 +184,18 @@ export default function EditRecipeForm() {
                 required
               />
             </div>
+            <div className="col-span-2 flex items-center p-3 sage-glass rounded-xl">
+              <input
+                id="fixedAmount"
+                type="checkbox"
+                checked={formData.fixedAmount}
+                onChange={(e) => setFormData({ ...formData, fixedAmount: e.target.checked })}
+                className="w-5 h-5 text-pinky-500 rounded focus:ring-pinky-400 mr-3"
+              />
+              <label htmlFor="fixedAmount" className="text-sm font-semibold text-sage-700 cursor-pointer select-none">
+                Fixed ingredient amounts (no scaling for shopping lists - perfect for bread recipes)
+              </label>
+            </div>
             <div>
               <label className="block text-sm font-semibold text-sage-700 mb-2">Difficulty</label>
               <select value={formData.difficulty} onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })} className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm">
@@ -288,6 +302,7 @@ export default function EditRecipeForm() {
                 <option value="Pantry">Pantry</option>
                 <option value="Meat">Meat</option>
                 <option value="Bakery">Bakery</option>
+                <option value="Alcohol">Alcohol</option>
                 <option value="Other">Other</option>
               </select>
               <input

@@ -9,7 +9,7 @@ const CATEGORIES = [
 const DIFFICULTIES = ['Easy', 'Medium', 'Pro'];
 const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece(s)', 'cup(s)', 'can(s)', 'bag', 'handful', 'bunch', 'pinch', 'oz'];
 
-export default function AddRecipeForm1({ onClose, onSuccess }) {
+export default function AddRecipeForm({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -17,6 +17,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
     prepTime: 0,
     cookTime: 0,
     servings: 4,
+    fixedAmount: false,
     imageUrl: '',
     tags: [],
     description: '',
@@ -128,6 +129,18 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               required
             />
           </div>
+          <div className="col-span-2 flex items-center p-3 sage-glass rounded-xl">
+            <input
+              id="fixedAmount"
+              type="checkbox"
+              checked={formData.fixedAmount}
+              onChange={(e) => setFormData({ ...formData, fixedAmount: e.target.checked })}
+              className="w-5 h-5 text-pinky-500 rounded focus:ring-pinky-400 mr-3"
+            />
+            <label htmlFor="fixedAmount" className="text-sm font-semibold text-sage-700 cursor-pointer select-none">
+              Fixed ingredient amounts (no scaling for shopping lists - perfect for bread recipes)
+            </label>
+          </div>
           <div>
             <label className="block text-sm font-semibold text-sage-700 mb-2">Difficulty</label>
             <select value={formData.difficulty} onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })} className="w-full p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm">
@@ -193,7 +206,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
 
         {/* Ingredients */}
         <div>
-          <label className="block text-sm font-medium mb-2">Ingredients</label>
+          <label className="block text-sm font-semibold text-sage-700 mb-4">Ingredients</label>
           <div className="flex gap-2 mb-4">
             <input
               type="text"
@@ -202,20 +215,22 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
               onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
               className="flex-1 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
             />
-            <select
-              value={newIngredient.category || ''}
-              onChange={(e) => setNewIngredient({ ...newIngredient, category: e.target.value })}
-              className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
-            >
-              <option value="">Category</option>
-              <option value="Produce">Produce</option>
-              <option value="Dairy">Dairy</option>
-              <option value="Pantry">Pantry</option>
-              <option value="Meat">Meat</option>
-              <option value="Bakery">Bakery</option>
-              <option value="Drinks">Drinks</option>
-              <option value="Other">Other</option>
-            </select>
+              <select
+                value={newIngredient.category || ''}
+                onChange={(e) => setNewIngredient({ ...newIngredient, category: e.target.value })}
+                className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
+              >
+                <option value="">Category</option>
+                <option value="Produce">Produce</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Pantry">Pantry</option>
+                <option value="Meat">Meat</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Drinks">Drinks</option>
+                <option value="Alcohol">Alcohol</option>
+                <option value="Spices & Herbs">Spices & Herbs</option>
+                <option value="Other">Other</option>
+              </select>
             <input
               type="number"
               placeholder="Amount"
@@ -254,7 +269,7 @@ export default function AddRecipeForm1({ onClose, onSuccess }) {
 
         {/* Instructions */}
         <div>
-          <label className="block text-sm font-medium mb-2">Instructions</label>
+          <label className="block text-sm font-semibold text-sage-700 mb-4">Instructions</label>
           <div className="flex gap-2 mb-4">
             <textarea
               placeholder="New instruction"
