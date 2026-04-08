@@ -1,7 +1,8 @@
 import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
+import { INGREDIENT_CATEGORIES } from '../lib/constants.jsx';
 
-const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece', 'cup', 'handful', 'bunch'];
+const UNITS = ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'piece(s)', 'cup(s)', 'can(s)', 'bag', 'handful', 'bunch', 'pinch', 'oz'];
 
 export default function DressingForm({ dressing, onDressingChange, title = 'Dressing, Sauces & Marinade' }) {
 const [newDressingIng, setNewDressingIng] = React.useState({ name: '', category: '', amount: 0, unit: '' });
@@ -28,21 +29,14 @@ const [newDressingIng, setNewDressingIng] = React.useState({ name: '', category:
           onChange={(e) => setNewDressingIng({ ...newDressingIng, name: e.target.value })}
           className="flex-1 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
         />
-        <select 
+<select 
           value={newDressingIng.category} 
           onChange={(e) => setNewDressingIng({ ...newDressingIng, category: e.target.value })}
           className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
         >
-          <option value="">Category</option>
-          <option value="Produce">Produce</option>
-          <option value="Dairy">Dairy</option>
-          <option value="Drinks">Drinks</option>
-          <option value="Pantry">Pantry</option>
-          <option value="Meat">Meat</option>
-          <option value="Bakery">Bakery</option>
-          <option value="Alcohol">Alcohol</option>
-          <option value="Spices & Herbs">Spices & Herbs</option>
-          <option value="Other">Other</option>
+          {INGREDIENT_CATEGORIES.map((category) => (
+            <option key={category} value={category}>{category}</option>
+          ))}
         </select>
         <input
           type="number"

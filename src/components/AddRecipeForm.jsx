@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, X } from 'lucide-react';
+import { Plus, Trash2, X, ChevronUp, ChevronDown } from 'lucide-react';
 import DressingForm from './DressingForm.jsx';
+import { INGREDIENT_CATEGORIES } from '../lib/constants.jsx';
 import { addRecipe } from '../services/recipeService';
 const CATEGORIES = [
   'Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Main Course',
@@ -57,6 +58,22 @@ export default function AddRecipeForm({ onClose, onSuccess }) {
 
   const removeIngredient = (index) => {
     setFormData({ ...formData, ingredients: formData.ingredients.filter((_, i) => i !== index) });
+  };
+
+  const moveIngredientUp = (index) => {
+    if (index > 0) {
+      const newIngredients = [...formData.ingredients];
+      [newIngredients[index - 1], newIngredients[index]] = [newIngredients[index], newIngredients[index - 1]];
+      setFormData({ ...formData, ingredients: newIngredients });
+    }
+  };
+
+  const moveIngredientDown = (index) => {
+    if (index < formData.ingredients.length - 1) {
+      const newIngredients = [...formData.ingredients];
+      [newIngredients[index], newIngredients[index + 1]] = [newIngredients[index + 1], newIngredients[index]];
+      setFormData({ ...formData, ingredients: newIngredients });
+    }
   };
 
   const addInstruction = () => {
@@ -215,21 +232,14 @@ export default function AddRecipeForm({ onClose, onSuccess }) {
               onChange={(e) => setNewIngredient({ ...newIngredient, name: e.target.value })}
               className="flex-1 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
             />
-              <select
+<select
                 value={newIngredient.category || ''}
                 onChange={(e) => setNewIngredient({ ...newIngredient, category: e.target.value })}
                 className="w-28 p-3 sage-glass rounded-xl focus:ring-2 focus:ring-pinky-400 shadow-sm"
               >
-                <option value="">Category</option>
-                <option value="Produce">Produce</option>
-                <option value="Dairy">Dairy</option>
-                <option value="Pantry">Pantry</option>
-                <option value="Meat">Meat</option>
-                <option value="Bakery">Bakery</option>
-                <option value="Drinks">Drinks</option>
-                <option value="Alcohol">Alcohol</option>
-                <option value="Spices & Herbs">Spices & Herbs</option>
-                <option value="Other">Other</option>
+                {INGREDIENT_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
               </select>
             <input
               type="number"
@@ -248,12 +258,32 @@ export default function AddRecipeForm({ onClose, onSuccess }) {
               <Plus className="w-4 h-4" />
             </button>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-48 overflow-y-auto">
             {formData.ingredients.map((ing, index) => (
-              <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                <span className="font-medium">{ing.name}</span>
-                <span>{ing.amount} {ing.unit}</span>
-                <button onClick={() => removeIngredient(index)} className="text-scandi-500 hover:text-fir-600">
+<div key={`\${ing.name}-\${index}`} className="flex items-center gap-3 p-3 sage-glass rounded-xl shadow-sm hover:bg-gray-50 transition-colors">
+                <span className="font-bold text-sm text-sage-600 min-w-[60px]">{ing.amount} {ing.unit}</span>
+                <span className="font-medium flex-1 text-sm">{ing.name}</span>
+                <span className="flex items-center gap-1 text-sm text-gray-500">
+                  {index > 0 && (
+                    <button 
+                      onClick={() => moveIngredientUp(index)} 
+                      className="p-1 hover:bg-blue-100 rounded-full transition-colors"
+                      title="Move up"
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </button>
+                  )}
+                  {index < formData.ingredients.length - 1 && (
+                    <button 
+                      onClick={() => moveIngredientDown(index)} 
+                      className="p-1 hover:bg-blue-100 rounded-full transition-colors"
+                      title="Move down"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                  )}
+                </span>
+                <button onClick={() => removeIngredient(index)} className="text-red-500 hover:text-red-700 hover:bg-red-100 p-1 rounded-full transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
